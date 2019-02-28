@@ -50,8 +50,8 @@ public class ExtractTrainTestData {
 	}
 	
 	public static void generateConllForm(){
-		String fopTrainFolder="/Users/hungphan/git/mlcompetition/WikiCoref/Evaluation/key_split/test/";
-		String fpOutTrain="/Users/hungphan/git/mlcompetition/WikiCoref/Evaluation/key_split/test.v4_gold_conll";
+		String fopTrainFolder="/Users/hungphan/git/mlcompetition/WikiCoref/Evaluation/key_split/train/";
+		String fpOutTrain="/Users/hungphan/git/mlcompetition/WikiCoref/Evaluation/key_split/train.v4_gold_conll";
 		File fTrain=new File(fopTrainFolder);
 		File[] arrFolder=fTrain.listFiles();
 		FileIO.writeStringToFile("", fpOutTrain);
