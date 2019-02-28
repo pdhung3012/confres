@@ -1,0 +1,24 @@
+#begin document (bc/cnn/00/cnn_0006); part 000
+bc/cnn/00/cnn_0006   0   0          Los   IN  *   -   -   -   speaker_1       *      -
+bc/cnn/00/cnn_0006   0   1    democracy    NN   *  -   -   -   speaker_1       *      (20
+bc/cnn/00/cnn_0006   0   2           in    IN      *   -   -   -   speaker_1       *      -
+bc/cnn/00/cnn_0006   0   3          the    DT      *   -   -   -   speaker_1   (LOC*   (151
+bc/cnn/00/cnn_0006   0   4       Obamaa   NNS         *   -   -   -   speaker_1       *      -
+bc/cnn/00/cnn_0006   0   5         east   NNP       *  -   -   -   speaker_1       *)   151)
+bc/cnn/00/cnn_0006   0   6           /.     .        *  -   -   -   speaker_1       *      20)
+
+bc/cnn/00/cnn_0006   0    0          Live    RB  *    -    -   -   speaker_3               *   (ARGM-MNR*       -
+bc/cnn/00/cnn_0006   0    1          from    IN          *    -    -   -   speaker_3               *            *       -
+bc/cnn/00/cnn_0006   0    2           CNN   NNP       *   -    -   -   speaker_3            (ORG)           *       -
+bc/cnn/00/cnn_0006   0    3            in    IN          *    -    -   -   speaker_3               *            *       -
+bc/cnn/00/cnn_0006   0    4    Washington   NNP      *   -    -   -   speaker_3            (GPE)           *)   (186)
+bc/cnn/00/cnn_0006   0    5          this    DT          *   -    -   -   speaker_3               *       (ARG1*)      -
+bc/cnn/00/cnn_0006   0    6            is   VBZ          *    be  01   2   speaker_3               *          (V*)      -
+bc/cnn/00/cnn_0006   0    7          Late   NNP       *    -    -   -   speaker_3   (WORK_OF_ART*       (ARG2*    (116
+bc/cnn/00/cnn_0006   0    8       Edition   NNP             *   -    -   -   speaker_3               *            *       -
+bc/cnn/00/cnn_0006   0    9          with    IN          *    -    -   -   speaker_3               *            *       -
+bc/cnn/00/cnn_0006   0   10          Wolf   NNP          *    -    -   -   speaker_3               *            *       -
+bc/cnn/00/cnn_0006   0   11       Blitzer   NNP          *   -    -   -   speaker_3               *)           *)    116)
+bc/cnn/00/cnn_0006   0   12            /.     .            *   -    -   -   speaker_3               *            *       -
+
+#end document
