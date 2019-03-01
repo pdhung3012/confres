@@ -649,7 +649,7 @@ class Document(object):
         #abc = raw_input("What is your name? ")
         return (features_, np.concatenate([mention.features, self.genre], axis=0))
 
-    def get_pair_mentions_features(self, m1, m2):
+    def get_pair_mentions_features(self, m1, m2,doc_id,fileCsv, fileId,fileLabel,fileFeature,setID):
         ''' Features for pair of mentions (same speakers, speaker mentioned, string match)'''
         features_ = {"00_SameSpeaker": 1 if self.consider_speakers and m1.speaker == m2.speaker else 0,
                      "01_AntMatchMentionSpeaker": 1 if self.consider_speakers and m2.speaker_match_mention(m1) else 0,
@@ -677,46 +677,42 @@ class Document(object):
                              self.genre]
         folderIndexMention="/home/hung/git/neuralcoref/unite/index/"
         #folderFeatureMention="/home/hung/git/neuralcoref/feature_mentions/"
-        folderUniteFile="/home/hung/git/neuralcoref/unite/"
-        fpUnitId="".join([folderUniteFile,"id.txt"])
-        fpUnitLbl="".join([folderUniteFile,"label.txt"])
-        fpUnitFeat="".join([folderUniteFile,"feat.txt"])
-        strFileM1="".join([folderIndexMention,str(m1.index),".txt"])
-        strFileM2="".join([folderIndexMention,str(m2.index),".txt"])
+        strFileM1="".join([folderIndexMention,str(doc_id),"_",str(m1.index),".txt"])
+        strFileM2="".join([folderIndexMention,str(doc_id),"_",str(m2.index),".txt"])
         #strFileFeat="".join([folderFeatureMention,str(m1.index),"_",str(m2.index),".txt"])
 
         if not os.path.isfile(strFileM1):
-            strWriteM1=u"".join([str(m1.index),"\n",str(m1.gold_label),"\n",str(m1.start),"\n",str(m1.end),"\n",str(m1).encode('utf8'),"\n"])
+            strWriteM1=u"".join([str(doc_id),"\n",str(m1.index),"\n",str(m1.gold_label),"\n",str(m1.start),"\n",str(m1.end),"\n",str(m1).encode('utf8'),"\n"])
             text_file = open(strFileM1, "w")
             text_file.write(strWriteM1)
             text_file.close()
 
         if not os.path.isfile(strFileM2):
-            strWriteM2=u"".join([str(m2.index),"\n",str(m2.gold_label),"\n",str(m2.start),"\n",str(m2.end),"\n",str(m2).encode('utf8'),"\n"])
+            strWriteM2=u"".join([str(doc_id),"\n",str(m2.index),"\n",str(m2.gold_label),"\n",str(m2.start),"\n",str(m2.end),"\n",str(m2).encode('utf8'),"\n"])
             text_file = open(strFileM2, "w")
             text_file.write(strWriteM2)
             text_file.close()
-        strPairLabel="0"
-        if m1.gold_label==m2.gold_label:
-            strPairLabel="1"
+
         finalResult=np.concatenate(pairwise_features, axis=0)
-        #strWriteFeat=u"".join([str(m1.index),"\n",str(m1.gold_label),"\n",str(m2.index),"\n",str(m2.gold_label),"\n",strPairLabel,"\n",str(finalResult).replace("\n", " "),"\n"])
-        strId="".join([str(m1.index),"_",str(m2.index),".txt"]).replace("\n", " ")
-        strFeat=str(finalResult).replace("\n", " ")
-        text_file = open(fpUnitId, "a+")
-        text_file.write("".join([strId,"\n"]))
-        text_file.close()
 
-        text_file = open(fpUnitLbl, "a+")
-        text_file.write("".join([strPairLabel,"\n"]))
-        text_file.close()
+        strId="".join([str(doc_id),"_",str(m1.index),"_",str(m2.index),".txt"]).replace("\n", " ").strip()
+        if strId not in setID:
+            setID.add(strId)
+            strPairLabel="0"
+            if m1.gold_label==m2.gold_label:
+                strPairLabel="1"
 
-        text_file = open(fpUnitFeat, "a+")
-        text_file.write("".join([strFeat,"\n"]))
-        text_file.close()
-#        text_file = open(strFileFeat, "w")
-#        text_file.write(strWriteFeat)
-#        text_file.close()
+            #strWriteFeat=u"".join([str(m1.index),"\n",str(m1.gold_label),"\n",str(m2.index),"\n",str(m2.gold_label),"\n",strPairLabel,"\n",str(finalResult).replace("\n", " "),"\n"])
+            strFeat="".join([str(doc_id),",",strId,","])
+            for i in range(len(finalResult)):
+                strFeat="".join([strFeat,str(finalResult[i]),","])
+            strFeat="".join([strFeat,strPairLabel])
+            #strFeat=str(finalResult).replace("\n", " ")
+
+            fileId.write("".join([strId,"\n"]))
+            fileLabel.write("".join([strPairLabel,"\n"]))
+            fileFeature.write("".join([strFeat,"\n"]))
+            fileCsv.write("".join([strFeat,"\n"]))
 
         #print(m1.gold_label+" "+m2.gold_label+" "+strPairLabel)
         #print('m1 '+' '+str(m1)+' '+str(m1.start)+' '+str(m1.end)+' '+str(m1.index)+' '+str(m1.gold_label)+' abc')

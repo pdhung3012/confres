@@ -50,27 +50,33 @@ public class ExtractTrainTestData {
 	}
 	
 	public static void generateConllForm(){
-		String fopTrainFolder="/Users/hungphan/git/mlcompetition/WikiCoref/Evaluation/key_split/train/";
-		String fpOutTrain="/Users/hungphan/git/mlcompetition/WikiCoref/Evaluation/key_split/train.v4_gold_conll";
+		String fopTrainFolder="/Users/hungphan/git/mlcompetition/WikiCoref/Evaluation/key_split/mix/";
+		String fpOutTrain="/Users/hungphan/git/mlcompetition/WikiCoref/Evaluation/key_split/mix.v4_gold_conll";
 		File fTrain=new File(fopTrainFolder);
 		File[] arrFolder=fTrain.listFiles();
 		FileIO.writeStringToFile("", fpOutTrain);
 		int indexPart=-1;
+		ArrayList<String> listFileNames=new ArrayList<String>();
 		for(int i=0;i<arrFolder.length;i++){
 			if(!arrFolder[i].getAbsolutePath().endsWith(".txt")){
 				continue;
-			} else{
-				indexPart++;
 			}
-			String[] arrContent=FileIO.readStringFromFile(arrFolder[i].getAbsolutePath()).split("\n");
+			listFileNames.add(arrFolder[i].getName());
+		}
+		
+		Collections.sort(listFileNames);
+		
+		for(int i=0;i<listFileNames.size();i++){
+			indexPart++;
+			String[] arrContent=FileIO.readStringFromFile(fopTrainFolder+listFileNames.get(i)).split("\n");
 			StringBuilder sb=new StringBuilder();
-			System.out.print(arrFolder[i].getAbsolutePath()+" aaaa "+arrContent.length);
+			System.out.println(arrFolder[i].getAbsolutePath()+" aaaa "+arrContent.length);
 			for(int j=0;j<arrContent.length;j++){
 				String item=arrContent[j];
 				
 				String line="";
 				if(item.startsWith("#begin document ")){
-					line="#begin document (bc/cnn/00/cnn_0006); part "+String.format("%03d", 0)+"\n";
+					line="#begin document (bc/cnn/00/cnn_0006); part "+String.format("%03d", indexPart)+"\n";
 				}else if(item.startsWith("#end document")){
 					line="\n#end document\n";
 				}
@@ -81,7 +87,7 @@ public class ExtractTrainTestData {
 					String[] arrItemContent=item.split("\\s+");
 					if(arrItemContent.length>=5){
 						line="bc/cnn/00/cnn_0006"+arrSpaces[0]
-								+arrItemContent[1].trim()+arrSpaces[1]+(Integer.parseInt(arrItemContent[2])-1)
+								+indexPart+arrSpaces[1]+(Integer.parseInt(arrItemContent[2])-1)
 									+arrSpaces[2]+arrItemContent[3]+arrSpaces[3]	+"(NP)"+arrSpaces[4]
 											+arrItemContent[4]+"\n";
 					}

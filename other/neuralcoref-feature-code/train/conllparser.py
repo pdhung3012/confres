@@ -354,12 +354,13 @@ class ConllDoc(Document):
                  ]
         return feat_l
 
-    def get_pair_mentions_features_conll(self, m1, m2, compressed=True):
+    def get_pair_mentions_features_conll(self, m1, m2,doc_id,fileCsv,fileId,fileLabel,fileFeature,setId, compressed=True):
         ''' Compressed or not single mention features'''
+
         if not compressed:
-            _, features = self.get_pair_mentions_features(m1, m2)
+            _, features = self.get_pair_mentions_features(m1, m2,doc_id,fileCsv,fileId,fileLabel,fileFeature,setId)
             return features[np.newaxis, :]
-        features_, _ = self.get_pair_mentions_features(m1, m2)
+        features_, _ = self.get_pair_mentions_features(m1, m2,doc_id,fileCsv,fileId,fileLabel,fileFeature,setId)
         feat_l = [features_["00_SameSpeaker"],
                   features_["01_AntMatchMentionSpeaker"],
                   features_["02_MentionMatchSpeaker"],
@@ -370,6 +371,7 @@ class ConllDoc(Document):
                   features_["07_MentionDistance"],
                   features_["08_Overlapping"],
                  ]
+
         return feat_l
 
     def get_feature_array(self, doc_id, feature=None, compressed=True, debug=True):
@@ -403,7 +405,16 @@ class ConllDoc(Document):
         total_pairs = 0
         if debug: print("mentions", self.mentions, str([m.gold_label for m in self.mentions]))
         indexMention=0
-
+        folderUniteFile="/home/hung/git/neuralcoref/unite/"
+        fpUnitId="".join([folderUniteFile,"id.txt"])
+        fpUnitLbl="".join([folderUniteFile,"label.txt"])
+        fpUnitFeat="".join([folderUniteFile,"feat.csv"])
+        fpUnitCsv="".join([folderUniteFile,"docs/",str(doc_id),".csv"])
+        fileId = open(fpUnitId, "a+")
+        fileLabel = open(fpUnitLbl, "a+")
+        fileFeature = open(fpUnitFeat, "a+")
+        fileCsv = open(fpUnitCsv, "a+")
+        setId=set()
         for mention_idx, antecedents_idx in list(self.get_candidate_pairs(max_distance=None, max_distance_with_match=None)):
             n_mentions += 1
             indexMention += 1
@@ -429,8 +440,8 @@ class ConllDoc(Document):
             if antecedents_idx:
                 pairs_ant_idx += [idx for idx in antecedents_idx]
                 strAntIdx=[idx for idx in antecedents_idx]
-                pairs_features += [self.get_pair_mentions_features_conll(ant, mention, compressed) for ant in ants]
-                strPairFt=str([self.get_pair_mentions_features_conll(ant, mention, compressed) for ant in ants])
+                pairs_features += [self.get_pair_mentions_features_conll(ant, mention,doc_id,fileCsv,fileId,fileLabel,fileFeature,setId, compressed) for ant in ants]
+                #strPairFt=str([self.get_pair_mentions_features_conll(ant, mention, compressed) for ant in ants])
                 ant_labels = [0 for ant in ants] if no_antecedent else [1 if ant.gold_label == mention.gold_label else 0 for ant in ants]
                 pairs_labels += ant_labels
                 strPairLbl=str(ant_labels)
@@ -439,29 +450,10 @@ class ConllDoc(Document):
             total_pairs += len(ants)
             mentions_pairs_length.append(len(ants))
 
-            fpTextOut="".join(["/home/hung/git/neuralcoref/outft/",str(doc_id),"_",str(indexMention),".txt"])
-            '''text_file = open(fpTextOut, "w")
-            strTotalFT="".join([str(mtft),"\n"])
-            strTotalFT="".join([strTotalFT,str(1 if no_antecedent else 0).replace("\n", " "),"\n"])
-            strTotalFT="".join([strTotalFT,str(len(ants)).replace("\n", " "),"\n"])
-            strTotalFT="".join([strTotalFT,str(total_pairs).replace("\n", " "),"\n"])
-            strTotalFT="".join([strTotalFT,str(mention.spans_embeddings).replace("\n", " "),"\n"])
-            strTotalFT="".join([strTotalFT,str(w_idx).replace("\n", " "),"\n"])
-            strTotalFT="".join([strTotalFT,str(strAntIdx).replace("\n", " "),"\n"])
-            strTotalFT="".join([strTotalFT,str(strPairFt).replace("\n", " "),"\n"])
-            strTotalFT="".join([strTotalFT,str(strPairLbl).replace("\n", " "),"\n"])
-            strTotalFT="".join([strTotalFT,str(strMentionLocation).replace("\n", " "),"\n"])
-            strTotalFT="".join([strTotalFT,str(self.conll_tokens).replace("\n", " "),"\n"])
-            strTotalFT="".join([strTotalFT,str(self.conll_lookup).replace("\n", " "),"\n"])
-            strTotalFT="".join([strTotalFT,str([{'name': self.name,
-                                  'part': self.part,
-                                  'utterances': list(str(u) for u in self.utterances),
-                                  'mentions': list(str(m) for m in self.mentions)}]).replace("\n", " "),"\n"])
-
-
-            #text_file.write("".join([str(mention),"\n",strTotalFT]))
-            #text_file.close()
-'''
+        fileId.close()
+        fileFeature.close()
+        fileLabel.close()
+        fileCsv.close()
         out_dict = {FEATURES_NAMES[0]: mentions_features,
                     FEATURES_NAMES[1]: mentions_labels,
                     FEATURES_NAMES[2]: mentions_pairs_length,
