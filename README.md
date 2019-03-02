@@ -33,7 +33,7 @@ Step 3: Writing code for applying Machine Learning models predicting mention co-
 - We write code in python that take all feature and label data in csv format and get the total accuracy by cross validation.
 - If the evaluation is time consumming, you can use our compact version of training-testing data.
 
-In overal, in this project we build Machine Learning models that given 2 arbitrary mentions and produce the output that predict 2 mentions are co-referred or not. The details of each steps can be seen in the documentation folder.
+In overal, in this project we build Machine Learning models that given 2 arbitrary mentions and produce the output that predict 2 mentions are co-referred or not. We think that the 2 remaining challenges of this corpus is automatically generated label and the corpus contains many pairs with 0 label so it might un-balance.The details of each steps can be seen in the documentation folder.
 
 
 
