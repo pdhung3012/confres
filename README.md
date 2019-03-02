@@ -13,7 +13,7 @@ The corpus is over 1.6 millions pairs of mentions in WikiCoref. We apply several
 - DecisionTreeClassifier (92.47%)
 - RandomForestClassifier (92.65%)
 - AdaBoostClassifier (to be updated)
-- LinearDiscriminantAnalysis
+- LinearDiscriminantAnalysis (57.29%)
 - QuadraticDiscriminantAnalysis()
 - LinearSVC
 - NuSVC 
